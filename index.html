@@ -1,110 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
   <title>Malla Ingeniería Comercial UdeC</title>
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
+      background: #f9f9f9;
       padding: 1rem;
       color: #333;
     }
     h1 {
       text-align: center;
+      text-decoration: underline;
+      text-decoration-color: #007BFF;
       margin-bottom: 1rem;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       gap: 1rem;
-      overflow-x: auto;
     }
     .semester {
-      background-color: #ffffff;
+      background: #fff;
       padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .semester h2 {
-      font-size: 1rem;
+    .semester h3 {
       text-align: center;
-      margin-bottom: 0.5rem;
     }
     .course {
-      background-color: #e3f2fd;
-      padding: 0.5rem;
+      background: #e3f2fd;
       border-radius: 5px;
+      padding: 0.5rem;
       margin-bottom: 0.5rem;
-      cursor: pointer;
       position: relative;
+      cursor: pointer;
+    }
+    .course.approved {
+      background: #388e3c;
+      color: white;
     }
     .course.locked {
-      background-color: #eeeeee;
+      background: #eeeeee;
       color: #999;
       cursor: default;
     }
+    .course:hover:not(.locked) {
+      background: #bbdefb;
+    }
     .tooltip {
       visibility: hidden;
-      background-color: #333;
+      background: #333;
       color: #fff;
-      text-align: center;
+      padding: 4px;
       border-radius: 4px;
-      padding: 0.3rem;
+      font-size: 0.75rem;
       position: absolute;
-      z-index: 1;
-      bottom: 110%;
+      bottom: 100%;
       left: 50%;
       transform: translateX(-50%);
       white-space: nowrap;
+      z-index: 10;
     }
-    .course:hover .tooltip {
+    .course.locked:hover .tooltip {
       visibility: visible;
-    }
-    .course.approved {
-      background-color: #c8e6c9;
     }
     .credits {
       font-size: 0.8rem;
       opacity: 0.8;
-    }
-    .grade-input {
-      margin-top: 0.3rem;
-      font-size: 0.8rem;
-    }
-    .grade-input input {
-      width: 3rem;
-    }
-    .average {
-      font-weight: bold;
-      font-size: 0.85rem;
-      margin-top: 0.2rem;
     }
   </style>
 </head>
 <body>
   <h1>Malla Ingeniería Comercial UdeC</h1>
   <div class="grid" id="grid"></div>
-
   <script>
     const semesters = {
-      1: [
+      "1": [
         { code: "136201", name: "Gestión de Empresas", credits: 5 },
         { code: "136202", name: "Cálculo I", credits: 5 },
         { code: "136203", name: "Economía I", credits: 4 },
         { code: "136204", name: "Álgebra I", credits: 5 },
         { code: "136205", name: "Derecho Corporativo I", credits: 3 }
       ],
-      2: [
+      "2": [
         { code: "136206", name: "Gestión de Personas I", credits: 3, prereq: ["136201"] },
         { code: "136207", name: "Contabilidad I", credits: 5, prereq: ["136205"] },
-        { code: "136208", name: "Cálculo II", credits: 4, prereq: ["136202"] },
+        { code: "136208", name: "Cálculo II", credits: 5, prereq: ["136202"] },
         { code: "136209", name: "Álgebra II", credits: 5, prereq: ["136204"] },
         { code: "136210", name: "Economía II", credits: 4, prereq: ["136203"] }
       ],
-      3: [
+      "3": [
         { code: "136211", name: "Cálculo III", credits: 4, prereq: ["136208"] },
         { code: "136212", name: "Contabilidad II", credits: 5, prereq: ["136207"] },
         { code: "136213", name: "Microeconomía I", credits: 4, prereq: ["136203"] },
@@ -112,7 +100,7 @@
         { code: "136215", name: "Tecnologías de la Información I", credits: 2 },
         { code: "136216", name: "Formación General I", credits: 2 }
       ],
-      4: [
+      "4": [
         { code: "136217", name: "Macroeconomía I", credits: 4, prereq: ["136210"] },
         { code: "136218", name: "Cálculo Financiero", credits: 3, prereq: ["136208"] },
         { code: "136219", name: "Tecnologías de Información II", credits: 3, prereq: ["136215"] },
@@ -120,7 +108,7 @@
         { code: "136221", name: "Inglés Comunicativo 1", credits: 3 },
         { code: "136222", name: "Estadística II", credits: 4, prereq: ["136214"] }
       ],
-      5: [
+      "5": [
         { code: "136223", name: "Finanzas I", credits: 4, prereq: ["136218"] },
         { code: "136224", name: "Gestión de Marketing I", credits: 4, prereq: ["136201"] },
         { code: "136225", name: "Inglés Comunicativo 2", credits: 3, prereq: ["136221"] },
@@ -128,7 +116,7 @@
         { code: "136227", name: "Microeconomía II", credits: 4, prereq: ["136213"] },
         { code: "136228", name: "Métodos Cuantitativos", credits: 4, prereq: ["136209"] }
       ],
-      6: [
+      "6": [
         { code: "136229", name: "Finanzas II", credits: 4, prereq: ["136223"] },
         { code: "136230", name: "Gestión de Operaciones", credits: 4, prereq: ["136228"] },
         { code: "136231", name: "Econometría I", credits: 4, prereq: ["136222"] },
@@ -136,7 +124,7 @@
         { code: "136233", name: "Administración Estratégica I", credits: 4, prereq: ["136223"] },
         { code: "136234", name: "Inglés Comunicativo 3", credits: 3, prereq: ["136225"] }
       ],
-      7: [
+      "7": [
         { code: "136235", name: "Evaluación de Proyectos", credits: 4, prereq: ["136227", "136223"] },
         { code: "136236", name: "Inglés Comunicativo 4", credits: 3, prereq: ["136234"] },
         { code: "FG2", name: "Formación General II", credits: 2 },
@@ -144,21 +132,21 @@
         { code: "136238", name: "Gestión de Personas II", credits: 4, prereq: ["136233"] },
         { code: "ELEC1", name: "Electivo de Licenciatura 1", credits: 4 }
       ],
-      8: [
+      "8": [
         { code: "136239", name: "Administración Estratégica II", credits: 5, prereq: ["136233"] },
         { code: "136240", name: "Metodología de la Investigación", credits: 5, prereq: ["136233"] },
         { code: "ELEC2", name: "Electivo de Licenciatura 2", credits: 4 },
         { code: "ELEC3", name: "Electivo de Licenciatura 3", credits: 4 },
         { code: "ELEC4", name: "Electivo de Licenciatura 4", credits: 4 }
       ],
-      9: [
+      "9": [
         { code: "EP1", name: "Electivo Profesional 1", credits: 4 },
         { code: "EP2", name: "Electivo Profesional 2", credits: 4 },
         { code: "EP3", name: "Electivo Profesional 3", credits: 4 },
         { code: "EP4", name: "Electivo Profesional 4", credits: 4 },
         { code: "EP5", name: "Electivo Profesional 5", credits: 4 }
       ],
-      10: [
+      "10": [
         { code: "136241", name: "Trabajo Profesional en Administración", credits: 10, prereq: ["136240"] },
         { code: "EP6", name: "Electivo Profesional 6", credits: 4 },
         { code: "EP7", name: "Electivo Profesional 7", credits: 4 },
@@ -167,25 +155,24 @@
     };
 
     const approved = JSON.parse(localStorage.getItem("aprobados") || "[]");
-    const notas = JSON.parse(localStorage.getItem("notas") || "{}");
 
     function render() {
       const grid = document.getElementById("grid");
       grid.innerHTML = "";
       for (let s = 1; s <= 10; s++) {
-        const column = document.createElement("div");
-        column.className = "semester";
-        column.innerHTML = `<h2>Semestre ${s}</h2>`;
-        for (const ramo of semesters[s]) {
+        const col = document.createElement("div");
+        col.className = "semester";
+        col.innerHTML = `<h3>Semestre ${s}</h3>`;
+        if (!semesters[s]) continue;
+        semesters[s].forEach(ramo => {
           const div = document.createElement("div");
-          const locked = ramo.prereq && !ramo.prereq.every(c => approved.includes(c));
-          div.className = `course ${locked ? "locked" : ""} ${approved.includes(ramo.code) ? "approved" : ""}`;
-          div.innerHTML = `${ramo.name}<div class="credits">(${ramo.credits} cr)</div>`;
-
+          const locked = ramo.prereq && !ramo.prereq.every(p => approved.includes(p));
+          div.className = "course" + (locked ? " locked" : "") + (approved.includes(ramo.code) ? " approved" : "");
+          div.innerHTML = ramo.name + `<div class='credits'>(${ramo.credits} cr)</div>`;
           if (locked) {
             const tooltip = document.createElement("div");
             tooltip.className = "tooltip";
-            tooltip.textContent = `Requiere: ${ramo.prereq.join(", ")}`;
+            tooltip.textContent = "Requiere: " + (ramo.prereq || []).join(", ");
             div.appendChild(tooltip);
           } else {
             div.addEventListener("click", () => {
@@ -195,30 +182,11 @@
               render();
             });
           }
-
-          const gradeDiv = document.createElement("div");
-          gradeDiv.className = "grade-input";
-          gradeDiv.innerHTML = `Nota: <input type="number" min="1" max="7" step="0.1" value="${notas[ramo.code] || ""}">`;
-          gradeDiv.querySelector("input").addEventListener("input", (e) => {
-            notas[ramo.code] = parseFloat(e.target.value);
-            localStorage.setItem("notas", JSON.stringify(notas));
-            render();
-          });
-          div.appendChild(gradeDiv);
-
-          const avg = document.createElement("div");
-          avg.className = "average";
-          if (notas[ramo.code]) {
-            avg.textContent = `Promedio: ${(notas[ramo.code] * 1).toFixed(1)}`;
-          }
-          div.appendChild(avg);
-
-          column.appendChild(div);
-        }
-        grid.appendChild(column);
+          col.appendChild(div);
+        });
+        grid.appendChild(col);
       }
     }
-
     render();
   </script>
 </body>
