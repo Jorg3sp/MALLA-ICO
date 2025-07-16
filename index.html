@@ -30,8 +30,8 @@
     .semester h3 {
       text-align: center;
     }
-    .course {
-      background: #e3f2fd;
+    .course {not(.approved):not(.locked) {
+  background-color: #1976D2;
       border-radius: 5px;
       padding: 0.5rem;
       margin-bottom: 0.5rem;
