@@ -14,7 +14,12 @@
       text-align: center;
       text-decoration: underline;
       text-decoration-color: #007BFF;
+      margin-bottom: 0.5rem;
+    }
+    .summary {
+      text-align: center;
       margin-bottom: 1rem;
+      font-size: 1.1rem;
     }
     .grid {
       display: grid;
@@ -30,13 +35,13 @@
     .semester h3 {
       text-align: center;
     }
-    .course {not(.approved):not(.locked) {
-  background-color: #1976D2;
+    .course {
       border-radius: 5px;
       padding: 0.5rem;
       margin-bottom: 0.5rem;
       position: relative;
       cursor: pointer;
+      transition: background 0.3s;
     }
     .course.approved {
       background: #388e3c;
@@ -47,8 +52,12 @@
       color: #999;
       cursor: default;
     }
-    .course:hover:not(.locked) {
-      background: #bbdefb;
+    .course:not(.approved):not(.locked) {
+      background-color: #1976D2;
+      color: white;
+    }
+    .course:hover:not(.locked):not(.approved) {
+      background-color: #1565C0;
     }
     .tooltip {
       visibility: hidden;
@@ -75,6 +84,9 @@
 </head>
 <body>
   <h1>Malla Ingeniería Comercial UdeC</h1>
+  <div class="summary">
+    <strong>Créditos Aprobados:</strong> <span id="creditos-aprobados">0</span> / <span id="creditos-total">0</span>
+  </div>
   <div class="grid" id="grid"></div>
   <script>
     const semesters = {
@@ -159,12 +171,20 @@
     function render() {
       const grid = document.getElementById("grid");
       grid.innerHTML = "";
+      let totalCreditos = 0;
+      let creditosAprobados = 0;
+
       for (let s = 1; s <= 10; s++) {
         const col = document.createElement("div");
         col.className = "semester";
         col.innerHTML = `<h3>Semestre ${s}</h3>`;
         if (!semesters[s]) continue;
         semesters[s].forEach(ramo => {
+          totalCreditos += ramo.credits;
+          if (approved.includes(ramo.code)) {
+            creditosAprobados += ramo.credits;
+          }
+
           const div = document.createElement("div");
           const locked = ramo.prereq && !ramo.prereq.every(p => approved.includes(p));
           div.className = "course" + (locked ? " locked" : "") + (approved.includes(ramo.code) ? " approved" : "");
@@ -186,7 +206,11 @@
         });
         grid.appendChild(col);
       }
+
+      document.getElementById("creditos-aprobados").textContent = creditosAprobados;
+      document.getElementById("creditos-total").textContent = totalCreditos;
     }
+
     render();
   </script>
 </body>
